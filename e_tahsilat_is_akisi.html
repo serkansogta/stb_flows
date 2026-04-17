@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E-Tahsilat İş Akışı</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f4f8; padding: 32px 16px; }
+
+  h2 {
+    text-align: center; color: #1e3a5f; margin-bottom: 32px;
+    font-size: 20px; letter-spacing: 0.5px;
+  }
+
+  .flow { display: flex; flex-direction: column; align-items: center; }
+
+  /* --- NODE STYLES --- */
+  .node {
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; font-size: 13px; font-weight: 600;
+    border-radius: 10px; padding: 10px 18px;
+    min-width: 230px; max-width: 300px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    line-height: 1.5;
+  }
+  .node.start    { background:#1e3a5f; color:#fff; border-radius:30px; }
+  .node.action   { background:#fff; color:#1e3a5f; border:2px solid #1e3a5f; }
+  .node.decision { background:#e8f0fe; color:#1e3a5f; border:2px solid #4a7cbf; border-radius:8px; }
+  .node.success  { background:#d4edda; color:#155724; border:2px solid #28a745; }
+  .node.warning  { background:#fff3cd; color:#856404; border:2px solid #ffc107; }
+  .node.danger   { background:#f8d7da; color:#721c24; border:2px solid #dc3545; }
+  .node.info     { background:#d1ecf1; color:#0c5460; border:2px solid #17a2b8; }
+  .node.end      { background:#6c757d; color:#fff; border-radius:30px; min-width:160px; }
+
+  .small { font-size: 11px; font-weight: 400; display:block; margin-top:3px; }
+
+  /* --- ARROWS --- */
+  .arrow-down {
+    width: 2px; height: 24px; background: #4a7cbf; margin: 0 auto; position: relative;
+  }
+  .arrow-down::after {
+    content:''; position:absolute; bottom:-7px; left:50%; transform:translateX(-50%);
+    border-left:6px solid transparent; border-right:6px solid transparent;
+    border-top:8px solid #4a7cbf;
+  }
+
+  /* --- BRANCH SYSTEM --- */
+  .branch-wrapper { display:flex; flex-direction:column; align-items:center; width:100%; }
+  .branch-row     { display:flex; flex-direction:row; align-items:flex-start; justify-content:center; gap:24px; width:100%; }
+  .branch-col     { display:flex; flex-direction:column; align-items:center; }
+
+  .branch-label {
+    font-size:11px; font-weight:700; padding:2px 12px;
+    border-radius:20px; margin-bottom:8px; color:#fff;
+  }
+  .branch-label.evet   { background:#28a745; }
+  .branch-label.hayir  { background:#dc3545; }
+  .branch-label.tur    { background:#4a7cbf; }
+
+  /* horizontal connector above branches */
+  .h-connector { height:2px; background:#4a7cbf; width:60%; margin:0 auto; }
+
+  /* sub-node smaller */
+  .node.sm { min-width:160px; max-width:200px; font-size:12px; padding:8px 12px; }
+  .node.xs { min-width:130px; max-width:170px; font-size:11px; padding:7px 10px; }
+
+  /* section divider */
+  .divider {
+    width:80%; border-top:1px dashed #4a7cbf;
+    margin:20px auto; text-align:center; position:relative;
+  }
+  .divider span {
+    position:absolute; top:-10px; left:50%; transform:translateX(-50%);
+    background:#f0f4f8; padding:0 10px; font-size:11px;
+    font-weight:700; color:#4a7cbf; white-space:nowrap;
+  }
+</style>
+</head>
+<body>
+
+<h2>📋 E-Tahsilat İş Akışı</h2>
+
+<div class="flow">
+
+  <!-- ADIM 1 -->
+  <div class="node start">Tebligat Geldi</div>
+  <div class="arrow-down"></div>
+
+  <!-- ADIM 2 -->
+  <div class="node action">
+    İPC Modülüne Giriş Yapılır
+    <span class="small">Hukuki dayanak · İPC faktörleri · Hesaplama</span>
+  </div>
+  <div class="arrow-down"></div>
+
+  <!-- ADIM 3 -->
+  <div class="node action">Uygulama Tarihi &amp; Zamanaşımı Durumu Girilir</div>
+  <div class="arrow-down"></div>
+
+  <!-- KARAR: Zamanaşımı -->
+  <div class="node decision">⚠️ Zamanaşımı Var mı?</div>
+  <div class="arrow-down"></div>
+
+  <div class="branch-row" style="align-items:flex-start; margin-top:4px;">
+
+    <!-- EVET kolu -->
+    <div class="branch-col">
+      <div class="branch-label evet">EVET</div>
+      <div class="node danger sm">Süreç Kapatılır</div>
+    </div>
+
+    <!-- HAYIR kolu -->
+    <div class="branch-col">
+      <div class="branch-label hayir">HAYIR – Devam</div>
+      <div class="node action sm">Tebligat Tarihi Girilir<span class="small">(= Tahakkuk tarihi)</span></div>
+      <div class="arrow-down"></div>
+      <div class="node action sm">Ödeme Türü Seçilir</div>
+      <div class="arrow-down"></div>
+
+      <!-- 3 ÖDEME TÜRÜ -->
+      <div class="branch-row" style="align-items:flex-start;">
+
+        <!-- PEŞİN %25 İNDİRİMLİ -->
+        <div class="branch-col">
+          <div class="branch-label tur">💚 Peşin %25 İndirimli</div>
+          <div class="node success xs">Son ödeme tarihi otomatik gelir<br>→ Muhasebata Gönder</div>
+          <div class="arrow-down"></div>
+          <div class="node decision xs">Zamanında Ödendi mi?</div>
+          <div class="arrow-down"></div>
+          <div class="branch-row">
+            <div class="branch-col">
+              <div class="branch-label evet">EVET</div>
+              <div class="node success xs">✅ Süreç Kapatılır</div>
+            </div>
+            <div class="branch-col">
+              <div class="branch-label hayir">HAYIR</div>
+              <div class="node decision xs">Taksit Talebi Var mı?</div>
+              <div class="arrow-down"></div>
+              <div class="branch-row">
+                <div class="branch-col">
+                  <div class="branch-label evet">EVET</div>
+                  <div class="node warning xs">İptal/Düzeltme<br>→ Dört Taksit'e geç</div>
+                </div>
+                <div class="branch-col">
+                  <div class="branch-label hayir">HAYIR</div>
+                  <div class="node danger xs">İptal/Ödenmedi<br>→ GİB'e yazı</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DÖRT TAKSİT -->
+        <div class="branch-col">
+          <div class="branch-label tur">🔵 Dört Taksit</div>
+          <div class="node info xs">Kaydet<br>→ Muhasebata Gönder</div>
+          <div class="arrow-down"></div>
+          <div class="node decision xs">Taksitler Zamanında Ödeniyor mu?</div>
+          <div class="arrow-down"></div>
+          <div class="branch-row">
+            <div class="branch-col">
+              <div class="branch-label evet">EVET</div>
+              <div class="node decision xs">Tüm Taksitler Tamamlandı mı?</div>
+              <div class="arrow-down"></div>
+              <div class="branch-row">
+                <div class="branch-col">
+                  <div class="branch-label evet">EVET</div>
+                  <div class="node success xs">✅ Süreç Kapatılır</div>
+                </div>
+                <div class="branch-col">
+                  <div class="branch-label hayir">HAYIR</div>
+                  <div class="node info xs">Takip devam eder</div>
+                </div>
+              </div>
+            </div>
+            <div class="branch-col">
+              <div class="branch-label hayir">HAYIR</div>
+              <div class="node danger xs">Terkin Et<br>→ GİB'e yazı</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PEŞİN İNDİRİMSİZ -->
+        <div class="branch-col">
+          <div class="branch-label tur">🟡 Peşin İndirimsiz</div>
+          <div class="node warning xs">İptal edilen kayıt<br>Güncelle → Yeniden Gönder</div>
+          <div class="arrow-down"></div>
+          <div class="node decision xs">Farklı Kanaldan Tahsil Geldi mi?</div>
+          <div class="arrow-down"></div>
+          <div class="branch-row">
+            <div class="branch-col">
+              <div class="branch-label evet">EVET</div>
+              <div class="node success xs">İptal/Diğer Kanallardan Ödendi<br>→ Süreç Kapatılır</div>
+            </div>
+            <div class="branch-col">
+              <div class="branch-label hayir">HAYIR</div>
+              <div class="node danger xs">GİB'e resmi yazı<br>ile iletilir</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Renk Açıklaması -->
+  <div style="margin-top:40px; display:flex; gap:16px; flex-wrap:wrap; justify-content:center;">
+    <div style="font-size:12px; display:flex; align-items:center; gap:5px;">
+      <div style="width:14px;height:14px;background:#d4edda;border:2px solid #28a745;border-radius:3px;"></div> Olumlu / Kapatma
+    </div>
+    <div style="font-size:12px; display:flex; align-items:center; gap:5px;">
+      <div style="width:14px;height:14px;background:#f8d7da;border:2px solid #dc3545;border-radius:3px;"></div> İptal / GİB'e İletme
+    </div>
+    <div style="font-size:12px; display:flex; align-items:center; gap:5px;">
+      <div style="width:14px;height:14px;background:#fff3cd;border:2px solid #ffc107;border-radius:3px;"></div> Güncelleme / Düzeltme
+    </div>
+    <div style="font-size:12px; display:flex; align-items:center; gap:5px;">
+      <div style="width:14px;height:14px;background:#d1ecf1;border:2px solid #17a2b8;border-radius:3px;"></div> Devam Eden Süreç
+    </div>
+    <div style="font-size:12px; display:flex; align-items:center; gap:5px;">
+      <div style="width:14px;height:14px;background:#e8f0fe;border:2px solid #4a7cbf;border-radius:3px;"></div> Karar Noktası
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
