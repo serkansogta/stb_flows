@@ -65,6 +65,21 @@
   .node.sm { min-width:160px; max-width:200px; font-size:12px; padding:8px 12px; }
   .node.xs { min-width:130px; max-width:170px; font-size:11px; padding:7px 10px; }
 
+  /* Karar gövde çizgisi — ok ucu yok */
+  .fork-stem::after { display: none; }
+
+  /* Dal ok: yatay çatal çizgisinden EVET/HAYIR etiketine inen ok */
+  .d-shaft {
+    width: 2px; height: 14px;
+    background: #4a7cbf;
+    margin: 0 auto; position: relative;
+  }
+  .d-shaft::after {
+    content:''; position:absolute; bottom:-7px; left:50%; transform:translateX(-50%);
+    border-left:6px solid transparent; border-right:6px solid transparent;
+    border-top:8px solid #4a7cbf;
+  }
+
   /* section divider */
   .divider {
     width:80%; border-top:1px dashed #4a7cbf;
@@ -100,18 +115,21 @@
 
   <!-- KARAR: Zamanaşımı -->
   <div class="node decision">⚠️ Zamanaşımı Var mı?</div>
-  <div class="arrow-down"></div>
+  <div class="arrow-down fork-stem"></div>
+  <div class="h-connector"></div>
 
   <div class="branch-row" style="align-items:flex-start; margin-top:4px;">
 
     <!-- EVET kolu -->
     <div class="branch-col">
+      <div class="d-shaft"></div>
       <div class="branch-label evet">EVET</div>
       <div class="node danger sm">Süreç Kapatılır</div>
     </div>
 
     <!-- HAYIR kolu -->
     <div class="branch-col">
+      <div class="d-shaft"></div>
       <div class="branch-label hayir">HAYIR – Devam</div>
       <div class="node action sm">Tebligat Tarihi Girilir<span class="small">(= Tahakkuk tarihi)</span></div>
       <div class="arrow-down"></div>
@@ -127,22 +145,28 @@
           <div class="node success xs">Son ödeme tarihi otomatik gelir<br>→ Muhasebata Gönder</div>
           <div class="arrow-down"></div>
           <div class="node decision xs">Zamanında Ödendi mi?</div>
-          <div class="arrow-down"></div>
+          <div class="arrow-down fork-stem"></div>
+          <div class="h-connector"></div>
           <div class="branch-row">
             <div class="branch-col">
+              <div class="d-shaft"></div>
               <div class="branch-label evet">EVET</div>
               <div class="node success xs">✅ Süreç Kapatılır</div>
             </div>
             <div class="branch-col">
+              <div class="d-shaft"></div>
               <div class="branch-label hayir">HAYIR</div>
               <div class="node decision xs">Taksit Talebi Var mı?</div>
-              <div class="arrow-down"></div>
+              <div class="arrow-down fork-stem"></div>
+              <div class="h-connector"></div>
               <div class="branch-row">
                 <div class="branch-col">
+                  <div class="d-shaft"></div>
                   <div class="branch-label evet">EVET</div>
                   <div class="node warning xs">İptal/Düzeltme<br>→ Dört Taksit'e geç</div>
                 </div>
                 <div class="branch-col">
+                  <div class="d-shaft"></div>
                   <div class="branch-label hayir">HAYIR</div>
                   <div class="node danger xs">İptal/Ödenmedi<br>→ GİB'e yazı</div>
                 </div>
@@ -157,24 +181,30 @@
           <div class="node info xs">Kaydet<br>→ Muhasebata Gönder</div>
           <div class="arrow-down"></div>
           <div class="node decision xs">Taksitler Zamanında Ödeniyor mu?</div>
-          <div class="arrow-down"></div>
+          <div class="arrow-down fork-stem"></div>
+          <div class="h-connector"></div>
           <div class="branch-row">
             <div class="branch-col">
+              <div class="d-shaft"></div>
               <div class="branch-label evet">EVET</div>
               <div class="node decision xs">Tüm Taksitler Tamamlandı mı?</div>
-              <div class="arrow-down"></div>
+              <div class="arrow-down fork-stem"></div>
+              <div class="h-connector"></div>
               <div class="branch-row">
                 <div class="branch-col">
+                  <div class="d-shaft"></div>
                   <div class="branch-label evet">EVET</div>
                   <div class="node success xs">✅ Süreç Kapatılır</div>
                 </div>
                 <div class="branch-col">
+                  <div class="d-shaft"></div>
                   <div class="branch-label hayir">HAYIR</div>
                   <div class="node info xs">Takip devam eder</div>
                 </div>
               </div>
             </div>
             <div class="branch-col">
+              <div class="d-shaft"></div>
               <div class="branch-label hayir">HAYIR</div>
               <div class="node danger xs">Terkin Et<br>→ GİB'e yazı</div>
             </div>
@@ -187,13 +217,16 @@
           <div class="node warning xs">İptal edilen kayıt<br>Güncelle → Yeniden Gönder</div>
           <div class="arrow-down"></div>
           <div class="node decision xs">Farklı Kanaldan Tahsil Geldi mi?</div>
-          <div class="arrow-down"></div>
+          <div class="arrow-down fork-stem"></div>
+          <div class="h-connector"></div>
           <div class="branch-row">
             <div class="branch-col">
+              <div class="d-shaft"></div>
               <div class="branch-label evet">EVET</div>
               <div class="node success xs">İptal/Diğer Kanallardan Ödendi<br>→ Süreç Kapatılır</div>
             </div>
             <div class="branch-col">
+              <div class="d-shaft"></div>
               <div class="branch-label hayir">HAYIR</div>
               <div class="node danger xs">GİB'e resmi yazı<br>ile iletilir</div>
             </div>
